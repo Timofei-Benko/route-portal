@@ -22,46 +22,64 @@ export default () => {
     function getCurrInfo(currCode) {
         const data = JSON.parse(localStorage.getItem('currency'))
 
-        const currData = data.find(curr => curr.Cur_Abbreviation === currCode)
-        const { Cur_Abbreviation, Cur_OfficialRate } = currData
+        const currData = data.find(curr => curr.Cur_Abbreviation === currCode.toUpperCase())
+        const { Cur_Abbreviation, Cur_OfficialRate, Cur_Scale } = currData
 
         return {
             code: Cur_Abbreviation,
             rate: Cur_OfficialRate,
+            scale: Cur_Scale,
         }
     }
 
+    const currInfo = [
+        getCurrInfo('usd'),
+        getCurrInfo('eur'),
+        getCurrInfo('rub'),
+    ];
+
     return (
         <div>
+
             <Card className="btn-card">
-                <Button variant="contained">
-                    <NavLink to="/usd">USD</NavLink>
-                </Button>
-
-                <Button variant="contained">
-                    <NavLink to="/eur">EUR</NavLink>
-                </Button>
-
-                <Button variant="contained">
-                    <NavLink to="/rub">RUB</NavLink>
-                </Button>
+                {
+                    currInfo.map((curr, index) => {
+                        return (
+                            <Button variant="contained" key={index}>
+                                <NavLink to={`/${curr.code.toLowerCase()}`}>{curr.code.toUpperCase()}</NavLink>
+                            </Button>
+                        )
+                    })
+                }
             </Card>
 
-            <Route path="/usd"
-                   render={(props) => (
-                       <CurrPage {...props} currInfo={getCurrInfo('USD')} />
-                   )}
-            />
-            <Route path="/eur"
-                   render={(props) => (
-                       <CurrPage {...props} currInfo={getCurrInfo('EUR')} />
-                   )}
-            />
-            <Route path="/rub"
-                   render={(props) => (
-                       <CurrPage {...props} currInfo={getCurrInfo('RUB')} />
-                   )}
-            />
+            {
+                currInfo.map((curr, index) => {
+                    return (
+                        <Route path={`/${curr.code.toLowerCase()}`}
+                               render={(props) => (
+                                   <CurrPage {...props} currInfo={getCurrInfo(curr.code)} />
+                               )}
+                        />
+                    )
+                })
+            }
+
+            {/*<Route path="/usd"*/}
+            {/*       render={(props) => (*/}
+            {/*           <CurrPage {...props} currInfo={getCurrInfo('usd')} />*/}
+            {/*       )}*/}
+            {/*/>*/}
+            {/*<Route path="/eur"*/}
+            {/*       render={(props) => (*/}
+            {/*           <CurrPage {...props} currInfo={getCurrInfo('eur')} />*/}
+            {/*       )}*/}
+            {/*/>*/}
+            {/*<Route path="/rub"*/}
+            {/*       render={(props) => (*/}
+            {/*           <CurrPage {...props} currInfo={getCurrInfo('rub')} />*/}
+            {/*       )}*/}
+            {/*/>*/}
         </div>
     )
 }

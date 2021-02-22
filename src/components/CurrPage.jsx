@@ -14,7 +14,7 @@ export default (props) => {
 
     const handleChangeAmount = ev => setInitAmount(+ev.target.value)
 
-    const converter = () => setConvertedAmount((initAmount * currData.rate.toFixed(2)))
+    const converter = () => setConvertedAmount((initAmount * currData.rate.toFixed(2)) * currData.scale)
 
     useMemo(() => {
         setCurrData(currInfo)
@@ -24,7 +24,8 @@ export default (props) => {
 
         <div className='wrap'>
             <Card className="container">
-                <TextField id="filled-basic"
+                <TextField className='input'
+                           id="filled-basic"
                            label="Amount to convert"
                            color="primary"
                            size="medium"
@@ -36,7 +37,7 @@ export default (props) => {
                         onClick={converter}
                 >Convert
                 </Button>
-                <p>{`You can get ${convertedAmount} ${currData.code} for this amount of BYN. Pathetic.`}</p>
+                <p>{`You can get ${convertedAmount} ${currData.code} for this amount of BYN`}</p>
             </Card>
         </div>
     )
